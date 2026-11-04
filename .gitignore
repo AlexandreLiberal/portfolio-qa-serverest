@@ -1,0 +1,14 @@
+# Dependências e arquivos gerados
+node_modules/
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# Segredos: nunca versionar
+.env
+*.env
+postman/*environment*.json
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
