@@ -1,0 +1,429 @@
+{
+  "info": {
+    "_postman_id": "374c6143-da58-4828-8a80-1af610468c05",
+    "name": "ServeRest - API de Usuários",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "7277321"
+  },
+  "item": [
+    {
+      "name": "01 - Usuários",
+      "item": [
+        {
+          "name": "Usuários - Cadastro válido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Usuários - Cadastro válido: status é 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Usuários - Cadastro válido: mensagem de cadastro realizado\", function () {\r\n    pm.expect(pm.response.json().message).to.eql(\"Cadastro realizado com sucesso\");\r\n});\r\n\r\npm.test(\"Usuários - Cadastro válido: resposta traz o _id\", function () {\r\n    pm.expect(pm.response.json()).to.have.property(\"_id\");\r\n});\r\n\r\n// Guarda o id do usuário criado para usar em outros testes\r\npm.collectionVariables.set(\"usuarioId\", pm.response.json()._id);"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Gera um e-mail novo a cada execução e guarda para os próximos testes\r\npm.collectionVariables.set(\"emailUsuario\", \"alexandre.\" + Date.now() + \"@qa.com.br\");\r\npm.collectionVariables.set(\"senhaUsuario\", \"teste123\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Alexandre QA\",\r\n  \"email\": \"{{emailUsuario}}\",\r\n  \"password\": \"{{senhaUsuario}}\",\r\n  \"administrador\": \"true\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuários - E-mail repetido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Usuários - E-mail repetido: status é 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Usuários - E-mail repetido: mensagem informa que o e-mail já está em uso\", function () {\r\n    pm.expect(pm.response.json().message).to.eql(\"Este email já está sendo usado\");\r\n});\r\n\r\npm.test(\"Usuários - E-mail repetido: nenhum usuário foi criado (resposta sem _id)\", function () {\r\n    pm.expect(pm.response.json()).to.not.have.property(\"_id\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Alexandre QA\",\r\n  \"email\": \"{{emailUsuario}}\",\r\n  \"password\": \"{{senhaUsuario}}\",\r\n  \"administrador\": \"true\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuários - Cadastro sem nome",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Usuários - Cadastro sem nome: status é 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Usuários - Cadastro sem nome: erro indica que o nome não pode ficar em branco\", function () {\r\n    pm.expect(pm.response.json().nome).to.eql(\"nome não pode ficar em branco\");\r\n});\r\n\r\npm.test(\"Usuários - Cadastro sem nome: nenhum usuário foi criado (sem _id)\", function () {\r\n    pm.expect(pm.response.json()).to.not.have.property(\"_id\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"\",\r\n  \"email\": \"sem.nome.{{$timestamp}}@qa.com.br\",\r\n  \"password\": \"{{senhaUsuario}}\",\r\n  \"administrador\": \"true\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuários - Cadastro sem senha",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Usuários - Cadastro sem senha: status é 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Usuários - Cadastro sem senha: erro indica que a senha não pode ficar em branco\", function () {\r\n    pm.expect(pm.response.json().password).to.eql(\"password não pode ficar em branco\");\r\n});\r\n\r\npm.test(\"Usuários - Cadastro sem senha: nenhum usuário foi criado (sem _id)\", function () {\r\n    pm.expect(pm.response.json()).to.not.have.property(\"_id\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Alexandre QA\",\r\n  \"email\": \"sem.senha.{{$timestamp}}@qa.com.br\",\r\n  \"password\": \"\",\r\n  \"administrador\": \"true\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuários - Listar todos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Usuários - Listar todos: status é 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Usuários - Listar todos: quantidade bate com o tamanho da lista\", function () {\r\n    var corpo = pm.response.json();\r\n    pm.expect(corpo.usuarios).to.be.an(\"array\");\r\n    pm.expect(corpo.quantidade).to.eql(corpo.usuarios.length);\r\n});\r\n\r\npm.test(\"Usuários - Listar todos: cada usuário tem os campos esperados\", function () {\r\n    var primeiro = pm.response.json().usuarios[0];\r\n    pm.expect(primeiro).to.have.all.keys(\"nome\", \"email\", \"password\", \"administrador\", \"_id\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuários - Buscar id com formato inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Usuários - Buscar id com formato inválido: status é 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Usuários - Buscar id com formato inválido: erro explica o formato do id\", function () {\r\n    pm.expect(pm.response.json().id).to.eql(\"id deve ter exatamente 16 caracteres alfanuméricos\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/id_inexistente_123",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "id_inexistente_123"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuários - Buscar id inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Usuários - Buscar id inexistente: status é 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Usuários - Buscar id inexistente: mensagem de usuário não encontrado\", function () {\r\n    pm.expect(pm.response.json().message).to.eql(\"Usuário não encontrado\");\r\n});\r\n\r\npm.test(\"Usuários - Buscar id inexistente: não devolve dados de usuário\", function () {\r\n    pm.expect(pm.response.json()).to.not.have.any.keys(\"nome\", \"email\", \"password\", \"_id\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/abcdef1234567890",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "abcdef1234567890"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Login",
+      "item": [
+        {
+          "name": "Login - Login válido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login - Dados válidos: status é 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Login - Dados válidos: mensagem de login realizado\", function () {\r\n    pm.expect(pm.response.json().message).to.eql(\"Login realizado com sucesso\");\r\n});\r\n\r\npm.test(\"Login - Dados válidos: devolve o token no formato Bearer\", function () {\r\n    pm.expect(pm.response.json().authorization).to.be.a(\"string\").and.match(/^Bearer /);\r\n});\r\n\r\n// Guarda o token no environment para as rotas que exigem login\r\npm.environment.set(\"token\", pm.response.json().authorization);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{emailUsuario}}\",\r\n  \"password\": \"{{senhaUsuario}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Senha errada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login - Senha errada: status é 401\", function () {\r\n    pm.response.to.have.status(401);\r\n});\r\n\r\npm.test(\"Login - Senha errada: mensagem de e-mail e/ou senha inválidos\", function () {\r\n    pm.expect(pm.response.json().message).to.eql(\"Email e/ou senha inválidos\");\r\n});\r\n\r\npm.test(\"Login - Senha errada: não devolve token\", function () {\r\n    pm.expect(pm.response.json()).to.not.have.property(\"authorization\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{emailUsuario}}\",\r\n  \"password\": \"senha_errada_999\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - E-mail não cadastrado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login - E-mail não cadastrado: status é 401\", function () {\r\n    pm.response.to.have.status(401);\r\n});\r\n\r\npm.test(\"Login - E-mail não cadastrado: mensagem genérica de e-mail e/ou senha inválidos\", function () {\r\n    pm.expect(pm.response.json().message).to.eql(\"Email e/ou senha inválidos\");\r\n});\r\n\r\npm.test(\"Login - E-mail não cadastrado: não devolve token\", function () {\r\n    pm.expect(pm.response.json()).to.not.have.property(\"authorization\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"usuario.inexistente.qa@qa.com.br\",\r\n  \"password\": \"teste123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - E-mail em branco",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login - E-mail em branco: status é 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"Login - E-mail em branco: erro indica que o e-mail não pode ficar em branco\", function () {\r\n    pm.expect(pm.response.json().email).to.eql(\"email não pode ficar em branco\");\r\n});\r\n\r\npm.test(\"Login - E-mail em branco: não devolve token\", function () {\r\n    pm.expect(pm.response.json()).to.not.have.property(\"authorization\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"\",\r\n  \"password\": \"teste123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "emailUsuario",
+      "value": ""
+    },
+    {
+      "key": "senhaUsuario",
+      "value": ""
+    },
+    {
+      "key": "usuarioId",
+      "value": ""
+    }
+  ]
+}
