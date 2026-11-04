@@ -54,4 +54,4 @@ Para acompanhar os testes na tela, use `npx cypress open`.
 - [x] Coleção do Postman com 11 cenários, executada no Runner em 03/11/2026: 32 testes aprovados, 0 falhas
 - [x] Automação com Cypress: 13 testes (11 de API e 2 de interface), todos aprovados em 04/11/2026
 - [x] Documentação dos cenários em BDD: [docs/cenarios-bdd.md](docs/cenarios-bdd.md)
-- [ ] Registro de defeitos e observações
+- [x] Registro de defeitos e observações: [docs/registro-defeitos-observacoes.md](docs/registro-defeitos-observacoes.md)
