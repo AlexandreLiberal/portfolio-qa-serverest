@@ -23,3 +23,20 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+
+// Cria um usuário com e-mail novo a cada chamada (a ServeRest não aceita e-mail repetido)
+Cypress.Commands.add("criarUsuario", (sobrescrever = {}) => {
+  const usuario = {
+    nome: "Alexandre QA",
+    email: `alexandre.${Date.now()}.${Cypress._.random(1000, 9999)}@qa.com.br`,
+    password: "teste123",
+    administrador: "true",
+    ...sobrescrever,
+  };
+
+  return cy.request("POST", "/usuarios", usuario).then((resposta) => ({
+    usuario,
+    resposta,
+  }));
+});
