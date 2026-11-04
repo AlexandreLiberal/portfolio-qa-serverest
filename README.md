@@ -46,7 +46,9 @@ Para acompanhar os testes na tela, use `npx cypress open`.
 
 ## Evidências
 ![Execução no terminal](evidencias/cypress-run-13-passing.png)
-![Login pela tela](evidencias/cypress-login-ui-passing.png)
+![Login pela tela em execução](evidencias/cypress-login-ui-em-execucao.png)
+![Login pela tela aprovado](evidencias/cypress-login-ui-passing.png)
+[Log completo da execução](evidencias/execucao-cypress.txt)
 
 ## Status
 - [x] Coleção do Postman com 11 cenários, executada no Runner em 03/11/2026: 32 testes aprovados, 0 falhas
